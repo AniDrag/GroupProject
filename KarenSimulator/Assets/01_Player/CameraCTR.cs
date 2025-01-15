@@ -10,12 +10,13 @@ public class CameraCTR : MonoBehaviour
     float horizontalRotation;
     float verticalRotation;
 
-    bool activeMouse;
+    public bool firstPersonView;
 
     [Header("Refrences")]
     [Tooltip("Refrence is curent save we are on, on the player a child orientation")]
     [SerializeField] SaveGameData saveGameData;
     [SerializeField] Transform playerOrientation;
+    [SerializeField] Transform thirdPersonTracker;
     Camera playerCamera;
 
     [Header("Camera settings")]
@@ -29,22 +30,21 @@ public class CameraCTR : MonoBehaviour
     [SerializeField] float verticalMultiplier = 100;
     void Start()
     {
-        activeMouse = true;
+        firstPersonView = true;
         playerCamera = GetComponent<Camera>();
-        ShowMouse();
+        SetParamaters();
     }
 
     void Update()
     {
         
-        SetParamaters();
-        if (Input.GetKeyDown(saveGameData.playerPrefs.activateMouse))
-        {
-            ShowMouse();
-        }
-        if (!activeMouse)
+        if (firstPersonView)
         {
             MouseInput();
+        }
+        else
+        {
+           THirdPersonControls();
         }
     }
 
@@ -61,6 +61,11 @@ public class CameraCTR : MonoBehaviour
         transform.rotation = Quaternion.Euler(horizontalRotation, verticalRotation, 0);
         playerOrientation.rotation = Quaternion.Euler(0, verticalRotation, 0);
 
+    }
+
+    void THirdPersonControls()
+    {
+        transform.rotation = Quaternion.Euler(0, thirdPersonTracker.rotation.y, 0);
     }
     public void SetParamaters()
     {
@@ -94,21 +99,6 @@ public class CameraCTR : MonoBehaviour
         else
         {
             Debug.LogWarning("Error in inversion System");
-        }
-    }
-
-    void ShowMouse()
-    {
-        if (!activeMouse)
-        {
-            Cursor.lockState = CursorLockMode.Confined;
-            Cursor.visible = true;
-            activeMouse = true;
-        }
-        else if (activeMouse) 
-        {            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-            activeMouse = false;
         }
     }
 }
