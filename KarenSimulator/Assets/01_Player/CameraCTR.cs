@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CameraCTR : MonoBehaviour
 {
-    //private
+    //private tracks ouse inputs
     float yInput;
     float xInput;
     float horizontalRotation;
@@ -13,6 +13,7 @@ public class CameraCTR : MonoBehaviour
     bool activeMouse;
 
     [Header("Refrences")]
+    [Tooltip("Refrence is curent save we are on, on the player a child orientation")]
     [SerializeField] SaveGameData saveGameData;
     [SerializeField] Transform playerOrientation;
     Camera playerCamera;
@@ -23,6 +24,7 @@ public class CameraCTR : MonoBehaviour
     private float verticalSensitivity;
 
     [Header("Tweeks")]
+    [Tooltip("This is a debug setting,")]
     [SerializeField] float horizontalMultiplier = 100;
     [SerializeField] float verticalMultiplier = 100;
     void Start()
