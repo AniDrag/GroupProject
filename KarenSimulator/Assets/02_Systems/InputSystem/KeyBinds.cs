@@ -6,35 +6,10 @@ using UnityEngine;
 
 public class KeyBinds : ScriptableObject
 {
-    /* public enum keycodeMechanic
-     {
-          None,
-          Interact,
-          Menu,
-          UseItem,
-          SprintHold,
-          SprintToggle,
-          WalkToggle,
-          CrouchHold,
-          CrouchToggle,
-          Jump,
-          Attack,
-          Block,
-          AimToggle,
-          AimHold,
-          Reload,
-          CancleCast,
-          Weapon1,
-          Weapon2, 
-          Weapon3,
-     }*/
-
       [Header("Player Interactions")]
       public KeyCode interact = KeyCode.F;
-      public KeyCode inventory = KeyCode.Tab;
+      public KeyCode screenSwitch = KeyCode.Tab;
       public KeyCode menu = KeyCode.Escape;
-      public KeyCode useItem = KeyCode.E;
-    public KeyCode activateMouse = KeyCode.Q;
 
       [Header("Player Movemant")]
       public KeyCode sprintHold = KeyCode.LeftShift;

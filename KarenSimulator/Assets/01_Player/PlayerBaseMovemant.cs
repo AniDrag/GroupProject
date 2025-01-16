@@ -35,6 +35,7 @@ public class PlayerBaseMovemant : MonoBehaviour
     [SerializeField] SaveGameData saveGameData;
     [SerializeField] Transform GroundCheckHitbox;
     [SerializeField] Transform playerOrientation;
+    [SerializeField] Transform thirdPersonTransform;
     [SerializeReference] Animator playerAnimations;
     CharacterController playerBody;
 
@@ -46,6 +47,7 @@ public class PlayerBaseMovemant : MonoBehaviour
     Vector3 moveDirection;
     bool jumped;
     [SerializeField] bool groundedPlayer;
+    public bool fps;
     private void Awake()
     {
         playerBody = GetComponent<CharacterController>();
@@ -55,6 +57,10 @@ public class PlayerBaseMovemant : MonoBehaviour
     {
         Grounded();
         PlayerInput();
+        if (!fps)
+        {
+            RotatePov();
+        }
 
     }
     void PlayerInput()
@@ -157,5 +163,26 @@ public class PlayerBaseMovemant : MonoBehaviour
     {
         state = PlayerStates.FreeFalling;
         
+    }
+    public void ResetOrientation()
+    {
+        playerOrientation.rotation = Quaternion.Euler(0,0,0);
+    }
+    void RotatePov()
+    {
+        if (moveDirection != Vector3.zero) // Ensure there's movement
+        {
+            // Calculate the target rotation angle in the Y-axis to face the movement direction
+            float targetYRotation = Mathf.Atan2(moveDirection.x, moveDirection.z) * Mathf.Rad2Deg;
+
+            // Create a rotation quaternion with the target Y rotation (keep X and Z rotations as 0)
+            Quaternion targetRotation = Quaternion.Euler(0, targetYRotation, 0);
+
+            // Smoothly rotate the thirdPersonTransform (camera) towards the target direction
+            thirdPersonTransform.rotation = Quaternion.Slerp(thirdPersonTransform.rotation, targetRotation, Time.deltaTime * 10f); // Adjust 10f for rotation speed
+        }
+        
+
+
     }
 }

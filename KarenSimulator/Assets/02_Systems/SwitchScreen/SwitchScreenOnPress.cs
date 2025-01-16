@@ -3,20 +3,20 @@ using UnityEngine.Events;
 
 public class SwitchScreenOnPress : MonoBehaviour
 {
-    public UnityEvent switchOne;
-    public UnityEvent switchTwo;
-    bool switched = false;
+    [SerializeField] UnityEvent switchOne;
+    [SerializeField] UnityEvent switchTwo;
+    public bool POV = true;
     public void SwitchScreen()
     {
-        if (!switched)
+        if (POV)
         {
             switchOne?.Invoke();
-            switched = true;
+            POV = false;
         }
         else
         {
             switchTwo?.Invoke();   
-            switched = false;
+            POV = true;
         }
 
     }

@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerName: Bob
   score: 0
-  horizontalSensitivity: 1
-  verticalSensitivity: 1
+  horizontalSensitivity: 1.081
+  verticalSensitivity: 1.106
   camMoveTypes: 3
   fieldOfView: 60
   masterVolume: 100
