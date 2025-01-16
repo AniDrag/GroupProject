@@ -8,7 +8,7 @@ public class PlayerInput : MonoBehaviour
     [SerializeField] SwitchScreenOnPress switchScreens;
     [SerializeField] [Tooltip("Get the main UI here that is not on player!")]GameObject UserInterface;
     [SerializeField] PlayerBaseMovemant movemant;
-    [SerializeField] Transform playerHand;
+    public Transform playerHand;
 
     bool menuActive = false;
     void Start()
@@ -61,6 +61,10 @@ public class PlayerInput : MonoBehaviour
             //attack function so for now its a tgrowable item
             // get child Item script compare enum type tghrowable, consuable ... request an apropriate action.
             playerHand.GetChild(0);// use item function her --> (0).sjdadj
+            GameObject throwable = playerHand.GetChild(0).gameObject;
+            Rigidbody bullet = throwable.GetComponent<Rigidbody>();
+            bullet.isKinematic = false;
+             bullet.AddForce(playerHand.forward * 25, ForceMode.Impulse);
         }
 
     }
