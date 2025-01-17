@@ -11,6 +11,8 @@ public class Spawner : MonoBehaviour
 {
     [SerializeField] SpawnableObjects spawnablesPreset;
     [SerializeField][Tooltip("after item is picked up")] float respawnDelay;
+    [SerializeField][Tooltip("Height of item spawn")][Range(0, 5)] float itemSpawnHeight;
+    [SerializeField][Tooltip("Item scale when spawned")][Range(0, 5)] Vector3 itemScaleOnSpawn;
 
     [Header("Player spawning")]
     [SerializeField] bool spawnPlayer;
@@ -42,7 +44,8 @@ public class Spawner : MonoBehaviour
         invokedSpawn = false;
         Debug.Log("No item, spawning Item");
         spawnIndex = Random.Range(0, spawnablesPreset.allSpawnables.Length);
-        spawnedItem = Instantiate(spawnablesPreset.allSpawnables[spawnIndex], spawnerTransform.position, Quaternion.identity);
+        spawnedItem = Instantiate(spawnablesPreset.allSpawnables[spawnIndex], spawnerTransform.position + Vector3.up * itemSpawnHeight, Quaternion.identity);
+        spawnedItem.transform.localScale = itemScaleOnSpawn;
         
         if (spawnedItem != null)
         {
