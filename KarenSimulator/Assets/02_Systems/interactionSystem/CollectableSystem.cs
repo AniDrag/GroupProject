@@ -1,23 +1,23 @@
 using UnityEngine;
-using UnityEngine.InputSystem.LowLevel;
+
 
 public class CollectableSystem : MonoBehaviour
 {
+    private PlayerInput player;
 
-    //Rigidbody rb;
-    private void Start()
-    {
-       // rb = GetComponent<Rigidbody>();
-
-    }
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            Destroy(gameObject);
-        }
-        Transform hand = other.GetComponent<PlayerInput>().playerHand;
-        Instantiate(transform, hand);
+            player = other.GetComponent<PlayerInput>();
 
+            if (player.itemEquiped == null)
+            {
+                Destroy(gameObject);
+                player.itemEquiped = transform.GetComponent<Item>();    
+                Instantiate(transform, player.playerHand);
+            }
+
+        }
     }
 }

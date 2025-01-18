@@ -1,4 +1,6 @@
+using System.ComponentModel;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerInput : MonoBehaviour
 {
@@ -8,15 +10,23 @@ public class PlayerInput : MonoBehaviour
     [SerializeField] SwitchScreenOnPress switchScreens;
     [SerializeField] [Tooltip("Get the main UI here that is not on player!")]GameObject UserInterface;
     [SerializeField] PlayerBaseMovemant movemant;
+    [SerializeField] Slider strengthMeter;
     public Transform playerHand;
+    public Item itemEquiped;
+    private bool isAiming;
+    bool menuActive;
+    public GameObject meter;
 
-    bool menuActive = false;
+    public float speedMeter = 1f; // Speed of movement
+    private bool movingRight = true; // Direction flag
+
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         AlertDebug();
-        
+        menuActive = false;
+        isAiming = false;
     }
 
     // Update is called once per frame
@@ -56,17 +66,73 @@ public class PlayerInput : MonoBehaviour
 
 
         // firemehanism
-        if (Input.GetKeyDown(gameData.playerPrefs.attack))
+        if (Input.GetKeyDown(gameData.playerPrefs.aim) && itemEquiped.itemType == Item.ItemType.throwable)
         {
-            //attack function so for now its a tgrowable item
-            // get child Item script compare enum type tghrowable, consuable ... request an apropriate action.
-            playerHand.GetChild(0);// use item function her --> (0).sjdadj
+            Debug.Log("inAimMode");
+            Throwable();
+            isAiming = true;
+            Flipping();
+    
+        }
+        else
+        {
+            Debug.Log("stop aiming");
+            isAiming = false;
+        }
+        if(Input.GetKeyDown(gameData.playerPrefs.Throw) && isAiming)
+        {
+           
+            Throwable();
+        }
+    }
+    void Flipping()
+    {
+        if (Input.GetKeyDown(gameData.playerPrefs.aim))
+        {
+
+        }
+    }
+    void Throwable()
+    {
+        if (playerHand.childCount > 0)
+        {
             GameObject throwable = playerHand.GetChild(0).gameObject;
             Rigidbody bullet = throwable.GetComponent<Rigidbody>();
-            bullet.isKinematic = false;
-             bullet.AddForce(playerHand.forward * 25, ForceMode.Impulse);
+            if (bullet != null)
+            {
+                bullet.isKinematic = false;
+                bullet.AddForce(playerHand.forward * strengthMeter.value, ForceMode.Impulse);
+            }
+            else
+            {
+                Debug.LogWarning("Throwable object has no Rigidbody component.");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("No throwable item found in playerHand.");
+            
         }
 
+    }
+
+    void Meter()
+    {
+        if (strengthMeter == null) return;
+
+        // Move the slider value
+        if (movingRight)
+        {
+            strengthMeter.value += speedMeter * Time.deltaTime;
+            if (strengthMeter.value >= strengthMeter.maxValue)
+                movingRight = false; // Reverse direction
+        }
+        else
+        {
+            strengthMeter.value -= speedMeter * Time.deltaTime;
+            if (strengthMeter.value <= strengthMeter.minValue)
+                movingRight = true; // Reverse direction
+        }
     }
     void ScreanManaging()
     {
