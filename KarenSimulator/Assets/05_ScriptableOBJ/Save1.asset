@@ -16,9 +16,9 @@ MonoBehaviour:
   score: 0
   horizontalSensitivity: 1.081
   verticalSensitivity: 1.106
-  camMoveTypes: 3
+  camMoveTypes: 0
   fieldOfView: 60
   masterVolume: 100
-  playerPrefs: {fileID: 11400000, guid: 14984f8871f456145ab06942ff672992, type: 2}
+  inputKeys: {fileID: 0}
   currentScene: 0
   gameSaveID: 1

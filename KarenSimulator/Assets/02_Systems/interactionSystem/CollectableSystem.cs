@@ -11,12 +11,11 @@ public class CollectableSystem : MonoBehaviour
         {
             player = other.GetComponent<PlayerInput>();
 
-            if (player.itemEquiped == null)
-            {
-                Destroy(gameObject);
-                player.itemEquiped = transform.GetComponent<Item>();    
-                Instantiate(transform, player.playerHand);
-            }
+            // Activate the equip function
+            player.EquipItem(transform.gameObject);
+            Destroy(gameObject);
+
+            
 
         }
     }

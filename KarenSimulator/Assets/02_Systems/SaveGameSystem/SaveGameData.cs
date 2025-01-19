@@ -14,10 +14,11 @@ public class SaveGameData : ScriptableObject
     // Enum for camera movement types
     public enum CameraMovemantType
     {
+        Default,
         InvertedAll,       // Both axes are inverted
         InvertedHorizontal, // Only horizontal axis is inverted
-        InvertedVertical,  // Only vertical axis is inverted
-        Default            // No inversion
+        InvertedVertical  // Only vertical axis is inverted
+                // No inversion
     }
 
     [Header("Settings")]
@@ -42,7 +43,7 @@ public class SaveGameData : ScriptableObject
 
     [Header("Key Bindings")]
     [Tooltip("Player's custom key bindings.")]
-    public KeyBinds playerPrefs;
+    public KeyBinds inputKeys;
 
     [Header("Save Details")]
     [Tooltip("The current scene index for this save.")]

@@ -105,7 +105,7 @@ public class CameraCTR : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("Player camera reference is missing.");
+            Debug.LogWarning("Player camera REFERENCE is missing.");
         }
     }
 

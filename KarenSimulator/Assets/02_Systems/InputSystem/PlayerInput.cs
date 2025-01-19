@@ -6,14 +6,9 @@ using static UnityEditor.Progress;
 public class PlayerInput : MonoBehaviour
 {
     [Header("Rerences")]
-    [SerializeField] SaveGameData gameData;
-    [SerializeField] CameraCTR camVievSettins;
-    [SerializeField] SwitchScreenOnPress switchScreens;
-    [SerializeField] [Tooltip("Get the main UI here that is not on player!")]GameObject UserInterface;
-    [SerializeField] PlayerBaseMovemant movemant;
+    PlayerRefrences REFERENCE;
     [SerializeField] Slider strengthMeter;
-    public Transform playerHand;
-    public Item itemEquiped;
+    private Item itemEquiped;
     private bool isAiming;
     bool menuActive;
     public GameObject meter;
@@ -23,9 +18,9 @@ public class PlayerInput : MonoBehaviour
 
     void Start()
     {
+        REFERENCE = GetComponent<PlayerRefrences>();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-        AlertDebug();
         menuActive = false;
         isAiming = false;
     }
@@ -33,20 +28,20 @@ public class PlayerInput : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(gameData.playerPrefs.menu))
+        if (Input.GetKeyDown(REFERENCE.inputKeys.menu))
         {
             //set menu active
             if (!menuActive)
             {
                 menuActive = true;
-                movemant.enabled = false;
+                REFERENCE.playerMovemant.enabled = false;
                 Cursor.lockState = CursorLockMode.Confined;
                 Cursor.visible = true;
             }
             else
             {
                 menuActive = false;
-                movemant.enabled = true;
+                REFERENCE.playerMovemant.enabled = true;
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
             }
@@ -60,14 +55,14 @@ public class PlayerInput : MonoBehaviour
 
     void InputReader()
     {
-        if (Input.GetKeyDown(gameData.playerPrefs.screenSwitch))
+        if (Input.GetKeyDown(REFERENCE.inputKeys.screenSwitch))
         {
             ScreanManaging();
         }
 
 
         // firemehanism
-        if (Input.GetKeyDown(gameData.playerPrefs.aim) && itemEquiped.itemType == Item.ItemType.throwable)
+        if (Input.GetKeyDown(REFERENCE.inputKeys.aim) && itemEquiped.itemType == Item.ItemType.Throwable)
         {
             Debug.Log("inAimMode");
             Throwable();
@@ -80,7 +75,7 @@ public class PlayerInput : MonoBehaviour
             Debug.Log("stop aiming");
             isAiming = false;
         }
-        if(Input.GetKeyDown(gameData.playerPrefs.Throw) && isAiming)
+        if(Input.GetKeyDown(REFERENCE.inputKeys.throwObject) && isAiming)
         {
            
             Throwable();
@@ -88,15 +83,15 @@ public class PlayerInput : MonoBehaviour
     }
     void Flipping()
     {
-        if (Input.GetKeyDown(gameData.playerPrefs.aim) && th)
+        if (Input.GetKeyDown(REFERENCE.inputKeys.aim))
         {
 
         }
     }
-    public void EquipItem(Item newItemEquip)
+    public void EquipItem(GameObject newGameObject)
     {
         // Check if there is more than 1 child in the player's hand
-        if (playerHand.childCount > 1)
+        if (REFERENCE.playerHand.childCount > 1)
         {
             // Debug: Log that we are replacing the current item
             Debug.Log("Replacing the currently equipped item.");
@@ -105,31 +100,32 @@ public class PlayerInput : MonoBehaviour
             Vector3 dropPoint = transform.position;
 
             // Spawn the current item on the ground at the player's position
-            Instantiate(playerHand.GetChild(0), dropPoint, Quaternion.identity);
+            Instantiate(REFERENCE.playerHand.GetChild(0), dropPoint, Quaternion.identity);
 
             // Destroy the current item from the player's hand
-            Destroy(playerHand.GetChild(0));
+            Destroy(REFERENCE.playerHand.GetChild(0));
 
             // Debug: Log the successful replacement
             Debug.Log("Current item dropped and destroyed.");
         }
 
+        Instantiate(newGameObject, REFERENCE.playerHand);
         // Equip the new item
-        itemEquiped = newItemEquip;
+        itemEquiped = newGameObject.GetComponent<Item>();
 
         // Debug: Log the new item that has been equipped
-        Debug.Log($"New item equipped: {newItemEquip.name}");
+        Debug.Log($"New item equipped: {newGameObject.name}");
     }
     void Throwable()
     {
-        if (playerHand.childCount > 0)
+        if (REFERENCE.playerHand.childCount > 0)
         {
-            GameObject throwable = playerHand.GetChild(0).gameObject;
+            GameObject throwable = REFERENCE.playerHand.GetChild(0).gameObject;
             Rigidbody bullet = throwable.GetComponent<Rigidbody>();
             if (bullet != null)
             {
                 bullet.isKinematic = false;
-                bullet.AddForce(playerHand.forward * strengthMeter.value, ForceMode.Impulse);
+                bullet.AddForce(REFERENCE.playerHand.forward * strengthMeter.value, ForceMode.Impulse);
             }
             else
             {
@@ -164,52 +160,19 @@ public class PlayerInput : MonoBehaviour
     }
     void ScreanManaging()
     {
-        switchScreens.SwitchScreen();
+        REFERENCE.switchScreens.SwitchScreen();
 
         //activate the top down view
-        if (switchScreens.POV == true)
+        if (REFERENCE.switchScreens.isFirstPersonView == true)
         {
-            camVievSettins.firstPersonView = true;
-            movemant.fps = true;
+            REFERENCE.cammeraControler.firstPersonView = true;
+            REFERENCE.playerMovemant.fps = true;
         }
         else
         {
-            camVievSettins.firstPersonView = false;
-            movemant.ResetOrientation();
-            movemant.fps = false;
-        }
-    }
-
-    void AlertDebug()
-    {
-        if (UserInterface == null)
-        {
-            Debug.LogWarning("User Interface not assigned");
-        }
-
-        if (gameData == null)
-        {
-            Debug.LogWarning("GameData (SaveGameData) not assigned");
-        }
-
-        if (camVievSettins == null)
-        {
-            Debug.LogWarning("Camera View Settings (CameraCTR) not assigned");
-        }
-
-        if (switchScreens == null)
-        {
-            Debug.LogWarning("SwitchScreens not assigned");
-        }
-
-        if (movemant == null)
-        {
-            Debug.LogWarning("Movement (PlayerBaseMovemant) not assigned");
-        }
-
-        if (playerHand == null)
-        {
-            Debug.LogWarning("Player Hand not assigned");
+            REFERENCE.cammeraControler.firstPersonView = false;
+            REFERENCE.playerMovemant.ResetOrientation();
+            REFERENCE.playerMovemant.fps = false;
         }
     }
 }

@@ -16,7 +16,8 @@ public class KeyBinds : ScriptableObject
     public KeyCode jump = KeyCode.Space;
 
     [Header("Player Combat")]
-    public KeyCode attack = KeyCode.Mouse0;
+    public KeyCode throwObject = KeyCode.Mouse0;
+    public KeyCode aim = KeyCode.Mouse1;
     public KeyCode cancelCast = KeyCode.R;
 
     /// <summary>
@@ -27,7 +28,7 @@ public class KeyBinds : ScriptableObject
         KeyCode[] allKeys = {
             interact, screenSwitch, menu,
             sprintHold, crouchToggle, jump,
-            attack, cancelCast
+            throwObject, aim, cancelCast
         };
 
         for (int i = 0; i < allKeys.Length; i++)
@@ -55,7 +56,8 @@ public class KeyBinds : ScriptableObject
         crouchToggle = KeyCode.C;
         jump = KeyCode.Space;
 
-        attack = KeyCode.Mouse0;
+        throwObject = KeyCode.Mouse0;
+        aim = KeyCode.Mouse1;
         cancelCast = KeyCode.R;
 
         Debug.Log("Key bindings reset to default values.");

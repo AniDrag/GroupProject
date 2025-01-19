@@ -33,11 +33,10 @@ public class PlayerBaseMovemant : MonoBehaviour
     public PlayerStates state; // Current state of the player
 
     [Header("References")]
-    [SerializeField] private SaveGameData saveGameData; // Reference to save data
+    PlayerRefrences REFERENCE;
     [SerializeField] private Transform GroundCheckHitbox; // Ground check position
     [SerializeField] private Transform playerOrientation; // Player's forward direction
     [SerializeField] private Transform thirdPersonTransform; // Camera or third-person pivot
-    [SerializeField] private Animator playerAnimations; // Animator for controlling animations
     private CharacterController playerBody; // Character controller component
 
     [Header("Debug View")]
@@ -52,7 +51,9 @@ public class PlayerBaseMovemant : MonoBehaviour
     private void Awake()
     {
         // Initialize references
+        fps = true;
         playerBody = GetComponent<CharacterController>();
+        REFERENCE = GetComponent<PlayerRefrences>();
     }
 
     private void Update()
@@ -81,26 +82,26 @@ public class PlayerBaseMovemant : MonoBehaviour
         moveDirection *= currentSpeed;
 
         // Determine if the player is sprinting
-        if (Input.GetKey(saveGameData.playerPrefs.sprintHold) && !jumped)
+        if (Input.GetKey(REFERENCE.inputKeys.sprintHold) && !jumped)
         {
             Debug.Log("Sprinting...");
-            playerAnimations.SetBool("Running", true);
+            REFERENCE.playerAnimator.SetBool("Running", true);
             state = PlayerStates.Running;
             currentSpeed = runSpeed;
 
             // Ensure the walking animation is disabled
-            if (playerAnimations.GetBool("Walking"))
+            if (REFERENCE.playerAnimator.GetBool("Walking"))
             {
-                playerAnimations.SetBool("Walking", false);
+                REFERENCE.playerAnimator.SetBool("Walking", false);
             }
         }
         else if (!jumped) // Walking logic
         {
-            if (playerAnimations.GetBool("Running") && !Input.GetKey(saveGameData.playerPrefs.sprintHold))
+            if (REFERENCE.playerAnimator.GetBool("Running") && !Input.GetKey(REFERENCE.inputKeys.sprintHold))
             {
-                playerAnimations.SetBool("Running", false);
+                REFERENCE.playerAnimator.SetBool("Running", false);
             }
-            playerAnimations.SetBool("Walking", true);
+            REFERENCE.playerAnimator.SetBool("Walking", true);
             state = PlayerStates.Walking;
             currentSpeed = walkSpeed;
         }
@@ -108,20 +109,20 @@ public class PlayerBaseMovemant : MonoBehaviour
         // Handle idle state
         if (moveDirection == Vector3.zero && !jumped)
         {
-            playerAnimations.SetBool("Walking", false);
-            playerAnimations.SetBool("Running", false);
-            playerAnimations.SetBool("Jump", false);
+            REFERENCE.playerAnimator.SetBool("Walking", false);
+            REFERENCE.playerAnimator.SetBool("Running", false);
+            REFERENCE.playerAnimator.SetBool("Jump", false);
             state = PlayerStates.Idle;
         }
 
         // Handle jumping logic
-        if (Input.GetKeyDown(saveGameData.playerPrefs.jump) && groundedTimer > 0)
+        if (Input.GetKeyDown(REFERENCE.inputKeys.jump) && groundedTimer > 0)
         {
             groundedTimer = 0;
             verticalVelocity += Mathf.Sqrt(jumpHeight * 2f * gravityValue);
             jumped = true;
             state = PlayerStates.Jumping;
-            playerAnimations.SetBool("Jump", true);
+            REFERENCE.playerAnimator.SetBool("Jump", true);
         }
 
         // Apply vertical velocity to the movement direction
@@ -146,7 +147,7 @@ public class PlayerBaseMovemant : MonoBehaviour
         {
             // Reset jump state when grounded
             jumped = false;
-            playerAnimations.SetBool("Jump", false);
+            REFERENCE.playerAnimator.SetBool("Jump", false);
         }
 
         if (groundedPlayer)
