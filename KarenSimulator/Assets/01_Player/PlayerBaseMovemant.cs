@@ -4,6 +4,203 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
 public class PlayerBaseMovemant : MonoBehaviour
 {
+    [Header("Movement Details")]
+    [SerializeField] private float walkSpeed = 5f; // Walking speed
+    [SerializeField] private float runSpeed = 10f; // Running speed
+    public float jumpHeight = 2f; // Jump height
+    [SerializeField] private float gravityValue = 9.81f; // Gravity strength
+
+    [Header("Ground Details")]
+    [SerializeField] private float verticalVelocity; // Vertical speed due to jumping and gravity
+    [SerializeField] private float groundedTimer; // Timer to ensure smoother jumping off ramps
+    [SerializeField] private float groundDrag = 0.5f; // Ground friction (currently unused)
+
+    // Enum to track player states
+    public enum PlayerStates
+    {
+        Idle,
+        Walking,
+        Running,
+        Crouching,
+        Jumping,
+        FreeFalling,
+        RunAndJump,
+        CrouchAndRun,
+        RunAndCrouch
+    }
+
+    [Header("Animation Controls")]
+    public PlayerStates state; // Current state of the player
+
+    [Header("References")]
+    [SerializeField] private SaveGameData saveGameData; // Reference to save data
+    [SerializeField] private Transform GroundCheckHitbox; // Ground check position
+    [SerializeField] private Transform playerOrientation; // Player's forward direction
+    [SerializeField] private Transform thirdPersonTransform; // Camera or third-person pivot
+    [SerializeField] private Animator playerAnimations; // Animator for controlling animations
+    private CharacterController playerBody; // Character controller component
+
+    [Header("Debug View")]
+    private float currentSpeed; // Current movement speed
+    private float horizontalInput; // Input on the X-axis
+    private float verticalInput; // Input on the Z-axis
+    private Vector3 moveDirection; // Final calculated movement direction
+    private bool jumped; // Is the player mid-jump?
+    private bool groundedPlayer; // Is the player grounded?
+    public bool fps; // Is the player in first-person mode?
+
+    private void Awake()
+    {
+        // Initialize references
+        playerBody = GetComponent<CharacterController>();
+    }
+
+    private void Update()
+    {
+        // Check if the player is grounded and update movement
+        Grounded();
+        PlayerInput();
+
+        // Handle third-person camera rotation
+        if (!fps)
+        {
+            RotatePov();
+        }
+    }
+
+    private void PlayerInput()
+    {
+        // Gather input for movement
+        verticalInput = Input.GetAxisRaw("Vertical");
+        horizontalInput = Input.GetAxisRaw("Horizontal");
+
+        // Calculate movement direction based on player orientation
+        moveDirection = playerOrientation.forward * verticalInput + playerOrientation.right * horizontalInput;
+
+        // Scale movement by the current speed
+        moveDirection *= currentSpeed;
+
+        // Determine if the player is sprinting
+        if (Input.GetKey(saveGameData.playerPrefs.sprintHold) && !jumped)
+        {
+            Debug.Log("Sprinting...");
+            playerAnimations.SetBool("Running", true);
+            state = PlayerStates.Running;
+            currentSpeed = runSpeed;
+
+            // Ensure the walking animation is disabled
+            if (playerAnimations.GetBool("Walking"))
+            {
+                playerAnimations.SetBool("Walking", false);
+            }
+        }
+        else if (!jumped) // Walking logic
+        {
+            if (playerAnimations.GetBool("Running") && !Input.GetKey(saveGameData.playerPrefs.sprintHold))
+            {
+                playerAnimations.SetBool("Running", false);
+            }
+            playerAnimations.SetBool("Walking", true);
+            state = PlayerStates.Walking;
+            currentSpeed = walkSpeed;
+        }
+
+        // Handle idle state
+        if (moveDirection == Vector3.zero && !jumped)
+        {
+            playerAnimations.SetBool("Walking", false);
+            playerAnimations.SetBool("Running", false);
+            playerAnimations.SetBool("Jump", false);
+            state = PlayerStates.Idle;
+        }
+
+        // Handle jumping logic
+        if (Input.GetKeyDown(saveGameData.playerPrefs.jump) && groundedTimer > 0)
+        {
+            groundedTimer = 0;
+            verticalVelocity += Mathf.Sqrt(jumpHeight * 2f * gravityValue);
+            jumped = true;
+            state = PlayerStates.Jumping;
+            playerAnimations.SetBool("Jump", true);
+        }
+
+        // Apply vertical velocity to the movement direction
+        moveDirection.y = verticalVelocity;
+
+        // Move the player using CharacterController
+        playerBody.Move(moveDirection * Time.deltaTime);
+    }
+
+    private void Grounded()
+    {
+        // Check if the player is grounded
+        groundedPlayer = playerBody.isGrounded;
+
+        if (!groundedPlayer && jumped)
+        {
+            // Transition to free-falling state after a short delay
+            Invoke(nameof(FreeFall), 1f);
+        }
+
+        if (jumped && groundedPlayer)
+        {
+            // Reset jump state when grounded
+            jumped = false;
+            playerAnimations.SetBool("Jump", false);
+        }
+
+        if (groundedPlayer)
+        {
+            // Reset grounded timer for smoother jumping
+            groundedTimer = 0.2f;
+        }
+
+        if (groundedTimer > 0)
+        {
+            groundedTimer -= Time.deltaTime;
+        }
+
+        // Reset vertical velocity when grounded
+        if (groundedPlayer && verticalVelocity < 0)
+        {
+            verticalVelocity = 0f;
+        }
+
+        // Apply gravity continuously
+        verticalVelocity -= gravityValue * Time.deltaTime;
+    }
+
+    private void FreeFall()
+    {
+        // Transition to free-falling state
+        state = PlayerStates.FreeFalling;
+        Debug.Log("Player is free-falling.");
+    }
+
+    public void ResetOrientation()
+    {
+        // Reset player orientation to the default (0,0,0) rotation
+        playerOrientation.rotation = Quaternion.Euler(0, 0, 0);
+    }
+
+    private void RotatePov()
+    {
+        if (moveDirection != Vector3.zero) // Rotate only when there is movement
+        {
+            // Calculate target Y rotation based on movement direction
+            float targetYRotation = Mathf.Atan2(moveDirection.x, moveDirection.z) * Mathf.Rad2Deg;
+
+            // Smoothly rotate the third-person transform towards the target rotation
+            thirdPersonTransform.rotation = Quaternion.Slerp(
+                thirdPersonTransform.rotation,
+                Quaternion.Euler(0, targetYRotation, 0),
+                Time.deltaTime * 10f // Adjust the rotation speed
+            );
+        }
+    }
+
+
+    /*
     [Header("Movemant Details")]
     [SerializeField] private float walkSpeed;
     [SerializeField] private float runSpeed;
@@ -184,5 +381,5 @@ public class PlayerBaseMovemant : MonoBehaviour
         
 
 
-    }
+    }*/
 }

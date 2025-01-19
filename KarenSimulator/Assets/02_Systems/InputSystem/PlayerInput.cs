@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEditor.Progress;
 
 public class PlayerInput : MonoBehaviour
 {
@@ -87,10 +88,37 @@ public class PlayerInput : MonoBehaviour
     }
     void Flipping()
     {
-        if (Input.GetKeyDown(gameData.playerPrefs.aim))
+        if (Input.GetKeyDown(gameData.playerPrefs.aim) && th)
         {
 
         }
+    }
+    public void EquipItem(Item newItemEquip)
+    {
+        // Check if there is more than 1 child in the player's hand
+        if (playerHand.childCount > 1)
+        {
+            // Debug: Log that we are replacing the current item
+            Debug.Log("Replacing the currently equipped item.");
+
+            // get player position and drop item
+            Vector3 dropPoint = transform.position;
+
+            // Spawn the current item on the ground at the player's position
+            Instantiate(playerHand.GetChild(0), dropPoint, Quaternion.identity);
+
+            // Destroy the current item from the player's hand
+            Destroy(playerHand.GetChild(0));
+
+            // Debug: Log the successful replacement
+            Debug.Log("Current item dropped and destroyed.");
+        }
+
+        // Equip the new item
+        itemEquiped = newItemEquip;
+
+        // Debug: Log the new item that has been equipped
+        Debug.Log($"New item equipped: {newItemEquip.name}");
     }
     void Throwable()
     {

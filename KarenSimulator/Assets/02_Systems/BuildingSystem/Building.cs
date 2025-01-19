@@ -5,6 +5,131 @@ using UnityEngine;
 public class Building : MonoBehaviour
 {
 
+    [Header("Residence Settings")]
+    [SerializeField] int residenceCount; // Total number of residents
+    [SerializeField] GameObject residencePrefab; // Resident prefab to spawn
+    [SerializeField] Transform residenceSpawnLocation; // Spawn location for residents
+    private GameObject[] residences; // Array to store spawned residents
+
+    [Header("Annoyance Settings")]
+    public int currentAnnoyance; // Current annoyance level
+    public int maxAnnoyance; // Maximum annoyance level
+    public bool isAnnoyed; // Whether the building is annoyed
+    [SerializeField, Range(1, 20)] float annoyanceDecreaseTimer; // Timer for decreasing annoyance
+    [SerializeField, Range(1, 10)] int decrementAnnoyance; // Annoyance decrement per interval
+
+    private bool decreasedAnnoyance;
+    private bool hasCitizensOutside;
+    private bool checkingCitizens;
+
+    [Header("Wave Settings")]
+    private int waveAmount; // Annoyance threshold for the next wave
+    private int oldWaveAmount; // Previous wave threshold
+    private int currentWave; // Current wave number
+
+    private void Start()
+    {
+        isAnnoyed = false;
+        residences = new GameObject[residenceCount];
+        waveAmount = maxAnnoyance / 5;
+    }
+
+    private void Update()
+    {
+        if (!checkingCitizens)
+        {
+            StartCoroutine(CheckIfCitizensAreOutsideOfHouse());
+        }
+
+        // Decrease annoyance if no residents are outside
+        if (!decreasedAnnoyance && !hasCitizensOutside)
+        {
+            StartCoroutine(DecreaseAnnoyance());
+        }
+
+        // Handle annoyance-based waves
+        if (currentAnnoyance >= waveAmount)
+        {
+            waveAmount += maxAnnoyance / 5;
+            currentWave++;
+            SpawnCitizens();
+        }
+        else if (currentAnnoyance < oldWaveAmount)
+        {
+            currentWave--;
+            waveAmount -= maxAnnoyance / 5;
+            oldWaveAmount -= maxAnnoyance / 5;
+        }
+    }
+
+    /// <summary>
+    /// Increases the building's annoyance by the given amount.
+    /// </summary>
+    public void AnnoyTarget(int annoyanceAmount)
+    {
+        currentAnnoyance += annoyanceAmount;
+        if (currentAnnoyance >= maxAnnoyance)
+        {
+            isAnnoyed = true;
+        }
+    }
+
+    /// <summary>
+    /// Gradually decreases annoyance over time.
+    /// </summary>
+    private IEnumerator DecreaseAnnoyance()
+    {
+        decreasedAnnoyance = true;
+
+        // Decrease annoyance by maxAnnoyance / residenceCount if residents are all inside
+        if (!hasCitizensOutside)
+        {
+            currentAnnoyance -= Mathf.RoundToInt((float)maxAnnoyance / residenceCount);
+            currentAnnoyance = Mathf.Max(0, currentAnnoyance); // Ensure annoyance doesn't go below zero
+        }
+
+        yield return new WaitForSeconds(annoyanceDecreaseTimer);
+        decreasedAnnoyance = false;
+    }
+
+    /// <summary>
+    /// Checks if any residents are currently outside the building.
+    /// </summary>
+    private IEnumerator CheckIfCitizensAreOutsideOfHouse()
+    {
+        checkingCitizens = true;
+        hasCitizensOutside = false;
+
+        for (int i = 0; i < residences.Length; i++)
+        {
+            if (residences[i] != null) // Check if a resident exists
+            {
+                hasCitizensOutside = true;
+                break;
+            }
+        }
+
+        yield return new WaitForSeconds(5);
+        checkingCitizens = false;
+    }
+
+    /// <summary>
+    /// Spawns citizens based on the current wave.
+    /// </summary>
+    private void SpawnCitizens()
+    {
+        int residentsToSpawn = (residenceCount / 5) * currentWave;
+
+        for (int i = 0; i < residences.Length; i++)
+        {
+            if (residences[i] == null && residentsToSpawn > 0)
+            {
+                residences[i] = Instantiate(residencePrefab, residenceSpawnLocation.position, Quaternion.identity);
+                residentsToSpawn--;
+            }
+        }
+    }
+    /*
     //
     //spawn ai
     //is anyoed
@@ -115,5 +240,5 @@ public class Building : MonoBehaviour
             i++;
             SpawnCitizens();
         }
-    }
+    }*/
 }
