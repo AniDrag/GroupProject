@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1988975912067960959}
   - component: {fileID: 8814790634444136432}
   - component: {fileID: 6823010856956611320}
+  - component: {fileID: 8669134285768136820}
   m_Layer: 0
   m_Name: PovCam
   m_TagString: MainCamera
@@ -150,11 +151,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bad01046b563eb9469911025b7a8fedc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  firstPersonView: 0
   saveGameData: {fileID: 11400000, guid: 01b50b56a018098448727b2b55f8bf7a, type: 2}
   playerOrientation: {fileID: 0}
+  thirdPersonTracker: {fileID: 0}
   fieldOfView: 60
   horizontalMultiplier: 100
   verticalMultiplier: 100
+--- !u!114 &8669134285768136820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3554524687193874876}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c6556701af9e04380698b89f691b6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nonRigidbodyVelocity: 0
+  attenuationObject: {fileID: 0}
 --- !u!1 &4559746139926921111
 GameObject:
   m_ObjectHideFlags: 0

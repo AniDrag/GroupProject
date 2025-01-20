@@ -729,7 +729,10 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1681436470188635791, guid: 4e96d84a6fd18de489cf2063b53b48f7, type: 3}
       insertIndex: -1
       addedObject: {fileID: 792572505510976224}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3554524687193874876, guid: 4e96d84a6fd18de489cf2063b53b48f7, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 9214346857406555260}
   m_SourcePrefab: {fileID: 100100000, guid: 4e96d84a6fd18de489cf2063b53b48f7, type: 3}
 --- !u!20 &763436750450492738 stripped
 Camera:
@@ -741,6 +744,25 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1681436470188635791, guid: 4e96d84a6fd18de489cf2063b53b48f7, type: 3}
   m_PrefabInstance: {fileID: 507951309646535206}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &3916071571447430042 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3554524687193874876, guid: 4e96d84a6fd18de489cf2063b53b48f7, type: 3}
+  m_PrefabInstance: {fileID: 507951309646535206}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &9214346857406555260
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3916071571447430042}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c6556701af9e04380698b89f691b6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nonRigidbodyVelocity: 0
+  attenuationObject: {fileID: 0}
 --- !u!4 &4272111860481711320 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4342890731712792318, guid: 4e96d84a6fd18de489cf2063b53b48f7, type: 3}
@@ -751,7 +773,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6823010856956611320, guid: 4e96d84a6fd18de489cf2063b53b48f7, type: 3}
   m_PrefabInstance: {fileID: 507951309646535206}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 3916071571447430042}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bad01046b563eb9469911025b7a8fedc, type: 3}
