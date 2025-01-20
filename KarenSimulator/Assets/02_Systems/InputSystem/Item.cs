@@ -1,7 +1,22 @@
 using UnityEngine;
+using UnityEngine.SocialPlatforms;
 
 public class Item : MonoBehaviour
 {
+   /* public enum ItemType
+    {
+        none,
+        throwable,
+        consumable
+    }
+
+    public ItemType itemType;
+    public int annoyenceLevel = 1;
+    public float annoyenceScale;
+    public bool isPickedUp;
+
+    [Range(0, 50)]
+    public float radious;*/
     public enum ItemType
     {
         None,
@@ -31,4 +46,5 @@ public class Item : MonoBehaviour
     [SerializeField] Rigidbody _Debug_itemBody;//the Rigid body component
     [SerializeField] Collider _Debug_itemCollider; // if we have items on a seperate layer this isnt an issue
     //MeeterUI playerMeeter; player Refrences Script will be attached here. all the players refrences will be here.
+
 }

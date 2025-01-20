@@ -76,7 +76,8 @@ public class KeyBinds : ScriptableObject
       public KeyCode jump = KeyCode.Space;
 
       [Header("Player Combat")]
-      public KeyCode attack = KeyCode.Mouse0;
+      public KeyCode aim = KeyCode.Mouse1;
+      public KeyCode Throw = KeyCode.Mouse0;
       public KeyCode cancleCast = KeyCode.R;
     */
 }

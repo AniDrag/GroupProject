@@ -16,7 +16,7 @@ public class AutoSlider : MonoBehaviour
         if(strengthMeter.value == strengthMeter.maxValue)
         {
             //explode hand
-            Debug.Log("animation ExplodeHand is playing");
+            //Debug.Log("animation ExplodeHand is playing");
         }
 
     }
