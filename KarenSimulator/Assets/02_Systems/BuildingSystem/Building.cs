@@ -32,6 +32,7 @@ public class Building : MonoBehaviour
         isAnnoyed = false;
         residences = new GameObject[residenceCount];
         waveAmount = maxAnnoyance / 5;
+        currentWave = 0;
     }
 
     private void Update()

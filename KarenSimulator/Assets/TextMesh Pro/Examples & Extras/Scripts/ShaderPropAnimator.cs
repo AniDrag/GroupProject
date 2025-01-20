@@ -17,10 +17,10 @@ namespace TMPro.Examples
 
         void Awake()
         {
-            // Cache a reference to object's renderer
+            // Cache a REFERENCE to object's renderer
             m_Renderer = GetComponent<Renderer>();
 
-            // Cache a reference to object's material and create an instance by doing so.
+            // Cache a REFERENCE to object's material and create an instance by doing so.
             m_Material = m_Renderer.material;
         }
 

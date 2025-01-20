@@ -45,7 +45,7 @@ public class Spawner : MonoBehaviour
         if (!isPlayerSpawner && !isSpawningItem && spawnedItem == null)
         {
             isSpawningItem = true;
-            Invoke(nameof(SpawnItem), respawnDelay);
+            Invoke("SpawnItem", respawnDelay);
         }
     }
 

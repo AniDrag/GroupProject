@@ -12,7 +12,7 @@ public class CollectableSystem : MonoBehaviour
             player = other.GetComponent<PlayerInput>();
 
             // Activate the equip function
-            player.EquipItem(transform.gameObject);
+            player.EquipItem(transform);
             Destroy(gameObject);
 
             

@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 0}
-  m_Name: Set_1
+  m_Name: Explosives
   m_EditorClassIdentifier: Assembly-CSharp::SpawnableObjects
   allSpawnables:
   - {fileID: 3861419026025966993, guid: 53dc66abddbc5c149b3d63534b8cb487, type: 3}

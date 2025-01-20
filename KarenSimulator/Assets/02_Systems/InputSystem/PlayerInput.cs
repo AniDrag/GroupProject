@@ -1,13 +1,11 @@
-using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEditor.Progress;
 
 public class PlayerInput : MonoBehaviour
 {
     [Header("Rerences")]
     PlayerRefrences REFERENCE;
-    [SerializeField] Slider strengthMeter;
+    [SerializeField] float strengthMeter;// well see this is a SLider
     private Item itemEquiped;
     private bool isAiming;
     bool menuActive;
@@ -60,24 +58,24 @@ public class PlayerInput : MonoBehaviour
             ScreanManaging();
         }
 
-
+        if(Input.GetKeyDown(REFERENCE.inputKeys.aim) && itemEquiped == null)
+        {
+            Flipping();
+        }
         // firemehanism
-        if (Input.GetKeyDown(REFERENCE.inputKeys.aim) && itemEquiped.itemType == Item.ItemType.Throwable)
+        else if (Input.GetKeyDown(REFERENCE.inputKeys.aim) && itemEquiped.itemType == Item.ItemType.Throwable)
         {
             Debug.Log("inAimMode");
-            Throwable();
             isAiming = true;
-            Flipping();
     
         }
-        else
+        else if (Input.GetKeyUp(REFERENCE.inputKeys.aim) && isAiming)
         {
-            Debug.Log("stop aiming");
             isAiming = false;
         }
+
         if(Input.GetKeyDown(REFERENCE.inputKeys.throwObject) && isAiming)
         {
-           
             Throwable();
         }
     }
@@ -88,10 +86,11 @@ public class PlayerInput : MonoBehaviour
 
         }
     }
-    public void EquipItem(GameObject newGameObject)
+    public void EquipItem(Transform newGameObject)
     {
+       
         // Check if there is more than 1 child in the player's hand
-        if (REFERENCE.playerHand.childCount > 1)
+        if (REFERENCE.playerHand.GetChild(0) != null)
         {
             // Debug: Log that we are replacing the current item
             Debug.Log("Replacing the currently equipped item.");
@@ -120,12 +119,13 @@ public class PlayerInput : MonoBehaviour
     {
         if (REFERENCE.playerHand.childCount > 0)
         {
+            Debug.Log("Thrown item 0");
             GameObject throwable = REFERENCE.playerHand.GetChild(0).gameObject;
             Rigidbody bullet = throwable.GetComponent<Rigidbody>();
             if (bullet != null)
             {
                 bullet.isKinematic = false;
-                bullet.AddForce(REFERENCE.playerHand.forward * strengthMeter.value, ForceMode.Impulse);
+                bullet.AddForce(REFERENCE.playerHand.forward * strengthMeter, ForceMode.Impulse);
             }
             else
             {
@@ -139,7 +139,7 @@ public class PlayerInput : MonoBehaviour
         }
 
     }
-
+/*
     void Meter()
     {
         if (strengthMeter == null) return;
@@ -157,7 +157,7 @@ public class PlayerInput : MonoBehaviour
             if (strengthMeter.value <= strengthMeter.minValue)
                 movingRight = true; // Reverse direction
         }
-    }
+    }*/
     void ScreanManaging()
     {
         REFERENCE.switchScreens.SwitchScreen();

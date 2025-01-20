@@ -41,7 +41,7 @@ namespace TMPro.Examples
 
             m_Canvas = gameObject.GetComponentInParent<Canvas>();
 
-            // Get a reference to the camera if Canvas Render Mode is not ScreenSpace Overlay.
+            // Get a REFERENCE to the camera if Canvas Render Mode is not ScreenSpace Overlay.
             if (m_Canvas.renderMode == RenderMode.ScreenSpaceOverlay)
                 m_Camera = null;
             else
@@ -103,7 +103,7 @@ namespace TMPro.Examples
                     // Get the index of the first vertex of the selected character.
                     int vertexIndex = m_TextMeshPro.textInfo.characterInfo[charIndex].vertexIndex;
 
-                    // Get a reference to the vertices array.
+                    // Get a REFERENCE to the vertices array.
                     Vector3[] vertices = m_TextMeshPro.textInfo.meshInfo[materialIndex].vertices;
 
                     // Determine the center point of the character.
@@ -139,7 +139,7 @@ namespace TMPro.Examples
                     // Change Vertex Colors of the highlighted character
                     Color32 c = new Color32(255, 255, 192, 255);
 
-                    // Get a reference to the vertex color
+                    // Get a REFERENCE to the vertex color
                     Color32[] vertexColors = m_TextMeshPro.textInfo.meshInfo[materialIndex].colors32;
 
                     vertexColors[vertexIndex + 0] = c;
@@ -148,7 +148,7 @@ namespace TMPro.Examples
                     vertexColors[vertexIndex + 3] = c;
 
 
-                    // Get a reference to the meshInfo of the selected character.
+                    // Get a REFERENCE to the meshInfo of the selected character.
                     TMP_MeshInfo meshInfo = m_TextMeshPro.textInfo.meshInfo[materialIndex];
 
                     // Get the index of the last character's vertex attributes.
@@ -184,7 +184,7 @@ namespace TMPro.Examples
                         // Get the index of the first vertex of this character.
                         int vertexIndex = m_TextMeshPro.textInfo.characterInfo[characterIndex].vertexIndex;
 
-                        // Get a reference to the vertex color
+                        // Get a REFERENCE to the vertex color
                         Color32[] vertexColors = m_TextMeshPro.textInfo.meshInfo[meshIndex].colors32;
 
                         Color32 c = vertexColors[vertexIndex + 0].Tint(1.33333f);
@@ -219,7 +219,7 @@ namespace TMPro.Examples
 
                         int vertexIndex = m_TextMeshPro.textInfo.characterInfo[characterIndex].vertexIndex;
 
-                        // Get a reference to the vertex color
+                        // Get a REFERENCE to the vertex color
                         Color32[] vertexColors = m_TextMeshPro.textInfo.meshInfo[meshIndex].colors32;
 
                         Color32 c = vertexColors[vertexIndex + 0].Tint(0.75f);
@@ -343,7 +343,7 @@ namespace TMPro.Examples
             {
                 TMP_WordInfo wInfo = m_TextMeshPro.textInfo.wordInfo[m_selectedWord];
 
-                // Get a reference to the uiVertices array.
+                // Get a REFERENCE to the uiVertices array.
                 UIVertex[] uiVertices = m_TextMeshPro.textInfo.meshInfo.uiVertices;
 
                 // Iterate through each of the characters of the word.
@@ -371,7 +371,7 @@ namespace TMPro.Examples
 
                 TMP_WordInfo wInfo = m_TextMeshPro.textInfo.wordInfo[wordIndex];
 
-                // Get a reference to the uiVertices array.
+                // Get a REFERENCE to the uiVertices array.
                 UIVertex[] uiVertices = m_TextMeshPro.textInfo.meshInfo.uiVertices;
 
                 // Iterate through each of the characters of the word.
@@ -464,10 +464,10 @@ namespace TMPro.Examples
             int vertexIndex = m_TextMeshPro.textInfo.characterInfo[index].vertexIndex;
 
             // Restore Vertices
-            // Get a reference to the cached / original vertices.
+            // Get a REFERENCE to the cached / original vertices.
             Vector3[] src_vertices = m_cachedMeshInfoVertexData[materialIndex].vertices;
 
-            // Get a reference to the vertices that we need to replace.
+            // Get a REFERENCE to the vertices that we need to replace.
             Vector3[] dst_vertices = m_TextMeshPro.textInfo.meshInfo[materialIndex].vertices;
 
             // Restore / Copy vertices from source to destination
@@ -477,10 +477,10 @@ namespace TMPro.Examples
             dst_vertices[vertexIndex + 3] = src_vertices[vertexIndex + 3];
 
             // Restore Vertex Colors
-            // Get a reference to the vertex colors we need to replace.
+            // Get a REFERENCE to the vertex colors we need to replace.
             Color32[] dst_colors = m_TextMeshPro.textInfo.meshInfo[materialIndex].colors32;
 
-            // Get a reference to the cached / original vertex colors.
+            // Get a REFERENCE to the cached / original vertex colors.
             Color32[] src_colors = m_cachedMeshInfoVertexData[materialIndex].colors32;
 
             // Copy the vertex colors from source to destination.

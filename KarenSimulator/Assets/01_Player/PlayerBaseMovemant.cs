@@ -84,7 +84,7 @@ public class PlayerBaseMovemant : MonoBehaviour
         // Determine if the player is sprinting
         if (Input.GetKey(REFERENCE.inputKeys.sprintHold) && !jumped)
         {
-            Debug.Log("Sprinting...");
+            
             REFERENCE.playerAnimator.SetBool("Running", true);
             state = PlayerStates.Running;
             currentSpeed = runSpeed;
