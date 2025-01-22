@@ -23,5 +23,9 @@ public class PlayerRefrences : MonoBehaviour
     public RawImage smallScreenFPS;// minmap 
     public RawImage bigScreenTPS;// thirdPersonView
     public RawImage smallScreenTPS; // minimap
+    public Slider strengthSlider; //manages value
+
+    public Slider dangerSlider; // manages critical state of item
+
 
 }

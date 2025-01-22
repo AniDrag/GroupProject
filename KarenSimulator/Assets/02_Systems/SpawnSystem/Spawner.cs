@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using System.Collections;
 
 [CreateAssetMenu(fileName = "SpawnSetName", menuName = "Tools/Spawnable set")]
 public class SpawnableObjects:ScriptableObject
@@ -19,6 +19,7 @@ public class Spawner : MonoBehaviour
     [Header("Player Spawning")]
     [SerializeField, Tooltip("Check if this spawner is responsible for spawning the player.")]
     private bool isPlayerSpawner = false;
+    public bool isPlayerAlive;
     [SerializeField, Tooltip("Player prefab to spawn (if applicable).")] private GameObject playerPrefab;
 
     // Internal tracking
@@ -44,33 +45,44 @@ public class Spawner : MonoBehaviour
         // If this is not a player spawner, handle item respawning
         if (!isPlayerSpawner && !isSpawningItem && spawnedItem == null)
         {
-            isSpawningItem = true;
             Invoke("SpawnItem", respawnDelay);
         }
+    }
+
+    public void ItemWasPickedUP()
+    {
+        StartCoroutine(StartSpawnTimer());
+    }
+    IEnumerator StartSpawnTimer()
+    {
+        yield return new WaitForSeconds(respawnDelay);
+        isSpawningItem = false;
     }
 
     /// <summary>
     /// Spawns an item from the spawnables preset at the spawner's position.
     /// </summary>
-    public void SpawnItem()
+    void SpawnItem()
     {
         if (spawnablesPreset == null || spawnablesPreset.allSpawnables.Length == 0)
         {
             Debug.LogError("No spawnable objects defined in the spawnables preset.");
             return;
         }
+        else
+        {
+            isSpawningItem = true;
+            Debug.Log("Spawning a new item.");
 
-        isSpawningItem = false;
-        Debug.Log("Spawning a new item.");
-
-        // Randomly select an item to spawn
-        spawnIndex = Random.Range(0, spawnablesPreset.allSpawnables.Length);
-        spawnedItem = Instantiate(
-            spawnablesPreset.allSpawnables[spawnIndex],
-            spawnerTransform.position + Vector3.up * itemSpawnHeight,
-            Quaternion.identity
-        );
-        spawnedItem.transform.localScale = itemScaleOnSpawn;
+            // Randomly select an item to spawn
+            spawnIndex = Random.Range(0, spawnablesPreset.allSpawnables.Length);
+            spawnedItem = Instantiate(
+                spawnablesPreset.allSpawnables[spawnIndex],
+                spawnerTransform.position + Vector3.up * itemSpawnHeight,
+                Quaternion.identity
+            );
+            spawnedItem.transform.localScale = itemScaleOnSpawn;
+        }
     }
 
     /// <summary>
@@ -93,6 +105,7 @@ public class Spawner : MonoBehaviour
                 Quaternion.identity
             );
             spawnedItem.transform.localScale = Vector3.one; // Default scale for the player
+            isPlayerAlive = true;
         }
         else
         {

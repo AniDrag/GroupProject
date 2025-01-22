@@ -11,7 +11,7 @@ public class ResidentAi : MonoBehaviour
     [SerializeField] float attackSpeed;
     [SerializeField] int maxAnnoyance;
     [SerializeField] int currentAnnoyance;
-
+    
     [Header("Events")]
     [Tooltip("Only SFX and VFX,")]
     [SerializeField] UnityEvent playOnAttack; // Only SFX and VFX
@@ -28,6 +28,7 @@ public class ResidentAi : MonoBehaviour
     [SerializeField] LayerMask playerLayer;
     [SerializeField] float spottingRange;
     [SerializeField] float attackRange;
+
 
     private NavMeshAgent aiAgent;
     private Transform target;
@@ -174,6 +175,8 @@ public class ResidentAi : MonoBehaviour
         // Destroy(gameObject);
 
         yield break;
+
+
     }
 
 

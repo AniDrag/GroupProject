@@ -6,10 +6,12 @@ public class PlayerInput : MonoBehaviour
     [Header("Rerences")]
     PlayerRefrences REFERENCE;
     [SerializeField] float strengthMeter;// well see this is a SLider
-    private Item itemEquiped;
+    public Item itemEquiped;
     private bool isAiming;
     bool menuActive;
     public GameObject meter;
+    public Transform playerHand;
+
 
     public float speedMeter = 1f; // Speed of movement
     private bool movingRight = true; // Direction flag
@@ -21,6 +23,7 @@ public class PlayerInput : MonoBehaviour
         Cursor.visible = false;
         menuActive = false;
         isAiming = false;
+        playerHand = REFERENCE.playerHand;
     }
 
     // Update is called once per frame
@@ -67,11 +70,13 @@ public class PlayerInput : MonoBehaviour
         {
             Debug.Log("inAimMode");
             isAiming = true;
-    
+            REFERENCE.strengthSlider.GetComponent<StrengthIndicator>().isActive = true;
+            REFERENCE.dangerSlider.GetComponent<StrengthIndicator>().isActive = true;
         }
         else if (Input.GetKeyUp(REFERENCE.inputKeys.aim) && isAiming)
         {
             isAiming = false;
+
         }
 
         if(Input.GetKeyDown(REFERENCE.inputKeys.throwObject) && isAiming)
@@ -83,49 +88,44 @@ public class PlayerInput : MonoBehaviour
     {
         if (Input.GetKeyDown(REFERENCE.inputKeys.aim))
         {
-
+            
         }
     }
-    public void EquipItem(Transform newGameObject)
+  /*  public void EquipItem(Transform newGameObject)
     {
-       
-        // Check if there is more than 1 child in the player's hand
-        if (REFERENCE.playerHand.GetChild(0) != null)
+        Debug.Log("Equipping");
+
+        // Check if there are no children in the player's hand
+        if (REFERENCE.playerHand.childCount == 0)
         {
-            // Debug: Log that we are replacing the current item
-            Debug.Log("Replacing the currently equipped item.");
+            // Instantiate the new item in the player's hand
+            Transform Item = Instantiate(newGameObject, REFERENCE.playerHand);
+            REFERENCE.playerHand.GetChild(0).position = new Vector3(0,0,0);
 
-            // get player position and drop item
-            Vector3 dropPoint = transform.position;
+            // Equip the new item
+            itemEquiped = Item.GetComponent<Item>();
 
-            // Spawn the current item on the ground at the player's position
-            Instantiate(REFERENCE.playerHand.GetChild(0), dropPoint, Quaternion.identity);
-
-            // Destroy the current item from the player's hand
-            Destroy(REFERENCE.playerHand.GetChild(0));
-
-            // Debug: Log the successful replacement
-            Debug.Log("Current item dropped and destroyed.");
+            // Debug: Log the new item that has been equipped
+            Debug.Log($"New item equipped: {Item.name}");
         }
-
-        Instantiate(newGameObject, REFERENCE.playerHand);
-        // Equip the new item
-        itemEquiped = newGameObject.GetComponent<Item>();
-
-        // Debug: Log the new item that has been equipped
-        Debug.Log($"New item equipped: {newGameObject.name}");
-    }
+        else
+        {
+            Debug.LogWarning("Player hand is not empty. Can't equip a new item.");
+        }
+    }*/
     void Throwable()
     {
         if (REFERENCE.playerHand.childCount > 0)
         {
             Debug.Log("Thrown item 0");
-            GameObject throwable = REFERENCE.playerHand.GetChild(0).gameObject;
+            GameObject throwable = playerHand.GetChild(0).gameObject;
             Rigidbody bullet = throwable.GetComponent<Rigidbody>();
             if (bullet != null)
             {
                 bullet.isKinematic = false;
-                bullet.AddForce(REFERENCE.playerHand.forward * strengthMeter, ForceMode.Impulse);
+                bullet.AddForce(playerHand.forward * REFERENCE.strengthSlider.value, ForceMode.Impulse);
+                REFERENCE.strengthSlider.GetComponent<StrengthIndicator>().isActive = false;
+                REFERENCE.dangerSlider.GetComponent<StrengthIndicator>().isActive = false;
             }
             else
             {
@@ -175,4 +175,5 @@ public class PlayerInput : MonoBehaviour
             REFERENCE.playerMovemant.fps = false;
         }
     }
+
 }

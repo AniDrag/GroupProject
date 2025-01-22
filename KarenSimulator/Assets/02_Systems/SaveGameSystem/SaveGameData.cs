@@ -10,6 +10,8 @@ public class SaveGameData : ScriptableObject
     [Header("Progress Tracking")]
     [Tooltip("Player's current score.")]
     public int score;
+    public int multiplier = 2;
+    public float timescore;
 
     // Enum for camera movement types
     public enum CameraMovemantType
