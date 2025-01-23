@@ -1,11 +1,62 @@
 using System;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class StrengthIndicator : MonoBehaviour
 {
-    [SerializeField] Slider strengthMeter; // Reference to the slider
+
+    public enum SliderType
+    {
+        Strenght,
+        Danger
+    }
+    [Header("Slider settings")]
+    public SliderType sliderType;
+    public float fillSpeed;
+    public bool isActive;
+    public UnityEvent onDangerSliderFill;
+
+    //debug
+    Slider thisSlider;
+    float fillIndex;
+
+    // Update is called once per frame
+    private void Awake()
+    {
+        thisSlider = GetComponent<Slider>();
+        fillIndex = 100 / fillSpeed;
+    }
+    void Update()
+    {
+        if (isActive)
+        {
+            UpdateSlider();
+        }
+    }
+    void UpdateSlider()
+    {
+        thisSlider.value += Time.deltaTime * fillIndex;
+        //Danger slider condition
+        if (sliderType == SliderType.Danger && thisSlider.value == thisSlider.maxValue)
+        {
+            onDangerSliderFill?.Invoke();// move playerHand position to other hand
+            Debug.Log("hand got destroyed");
+        }
+        else if (sliderType == SliderType.Strenght)// Strenght slider value
+        {
+            if (thisSlider.value == thisSlider.maxValue || thisSlider.value == thisSlider.minValue)
+            {
+                fillIndex *= -1;
+            }
+        }
+    }
+
+
+}
+
+    /*[SerializeField] Slider strengthMeter; // Reference to the slider
     public float speedMeter = 1f; // Speed of movement
 
     public bool isMoving;
@@ -81,5 +132,7 @@ public class StrengthIndicator : MonoBehaviour
         {
             Debug.Log("Destroy hand");
         }
-    }
-}
+    }*/
+
+
+

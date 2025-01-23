@@ -12,7 +12,7 @@ public class UItracker : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        score = 0;
+        Data.score = 0;
         Data.timescore = 0;
         Data.multiplier = 1;
     }
@@ -36,12 +36,20 @@ public class UItracker : MonoBehaviour
     void ScoreTracker()
     {
         scoreTracker.text = "score: " + Data.score;
+        
     }
 
     void Multiplier()
     {
-        scoreMultiplier.text = "score: " + Data.multiplier;
+        scoreMultiplier.text =  Data.multiplier + "X";
        Data.multiplier = 2* Data.score;
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+       if (collision.gameObject.CompareTag("Annoyable"))
+        {
+            Data.score += 10;
+        }
+    }
 }

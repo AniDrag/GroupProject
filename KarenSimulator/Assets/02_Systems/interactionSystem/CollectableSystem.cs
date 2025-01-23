@@ -16,7 +16,7 @@ public class CollectableSystem : MonoBehaviour
             // Activate the equip function
             if (player.playerHand.childCount == 0 )
             {
-                EquipItem(transform);
+                player.EquipItem(transform.gameObject);
              //   transform.parent.GetComponent<Spawner>().ItemWasPickedUP();
                 Destroy(gameObject);
             }
@@ -24,7 +24,7 @@ public class CollectableSystem : MonoBehaviour
         }
 
     }
-    public void EquipItem(Transform newGameObject)
+    /*public void EquipItem(Transform newGameObject)
     {
         Debug.Log("Equipping");
 
@@ -44,5 +44,5 @@ public class CollectableSystem : MonoBehaviour
         {
             Debug.LogWarning("Player hand is not empty. Can't equip a new item.");
         }
-    }
+    }*/
 }

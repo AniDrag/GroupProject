@@ -38,14 +38,37 @@ public class Item : MonoBehaviour
     [SerializeField] Collider _Debug_itemCollider; // if we have items on a seperate layer this isnt an issue
                                                    //MeeterUI playerMeeter; player Refrences Script will be attached here. all the players refrences will be here.
     Collider[] hits;
+    bool itemThrown;
 
+        private void Awake()
+        {
+        _Debug_itemBody = GetComponent<Rigidbody>();
+        _Debug_itemBody.isKinematic = true;
+        //itemBody.mass = itemMass;
+        _Debug_itemCollider = GetComponent<SphereCollider>();
+        _Debug_itemCollider.isTrigger = true;
+        }
 
+    private void Update()
+    {
+        if (!itemThrown)
+        {
+            transform.localPosition = Vector3.zero;
+        }
+    }
     private void OnCollisionEnter(Collision collision)
     {
         if (collision != null)
         {
             CheckHitLayer();
         }
+    }
+
+    public void ThrowItem()
+    {
+        _Debug_itemBody.isKinematic = false;
+        _Debug_itemCollider.isTrigger = false;
+        itemThrown = false;
     }
     void ActivateItem()
     {
